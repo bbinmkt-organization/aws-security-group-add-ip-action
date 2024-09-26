@@ -7,34 +7,45 @@ async function add() {
     const ip = await publicIpv4();
 
     core.info(`Public IP: ${ip}`);
-    const ec2 = new aws.EC2();
+
+    const awsAccessKeyId = core.getInput('aws-access-key-id');
+    const awsSecretAccessKey = core.getInput('aws-secret-access-key');
+    const awsRegion = core.getInput('aws-region');
+
+    core.info(`AWS Access Key ID: ${awsAccessKeyId}`);
+    core.info(`AWS Secret Access Key: ${awsSecretAccessKey}`);
+    core.info(`AWS Region: ${awsRegion}`);
+
+    if (!awsAccessKeyId || !awsSecretAccessKey || !awsRegion) {
+        core.setFailed('AWS credentials or region not provided');
+        return;
+    }
+
+
+
+
+
 
     aws.config.update({
-        accessKeyId: core.getInput('aws-access-key-id'),
-        secretAccessKey: core.getInput('aws-secret-access-key'),
-        region: core.getInput('aws-region')
+        accessKeyId: awsAccessKeyId,
+        secretAccessKey: awsSecretAccessKey,
+        region: awsRegion
     });
 
-    const GroupId = core.getInput('aws-security-group-id');
 
+    const ec2 = new aws.EC2();
+
+    const GroupId = core.getInput('aws-security-group-id')
+    const port = core.getInput('port');
+    const toPort = core.getInput('to-port');
+    const protocol = core.getInput('protocol');
+    const description = core.getInput('description');
 
 
     core.info(`Security Group ID: ${GroupId}`);
-
-    const port = core.getInput('port');
-
     core.info(`Port: ${port}`);
-
-    const toPort = core.getInput('to-port');
-
     core.info(`To Port: ${toPort}`);
-
-    const protocol = core.getInput('protocol');
-
     core.info(`Protocol: ${protocol}`);
-
-    const description = core.getInput('description');
-
     core.info(`Description: ${description}`);
 
     const params = {
