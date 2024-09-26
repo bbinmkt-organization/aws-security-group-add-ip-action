@@ -16,6 +16,17 @@ AWS.config.update({
     region
 });
 
+console.log('config :: ', {
+    accessKeyId,
+    secretAccessKey,
+    region,
+    SecurityGroupId,
+    port,
+    toPort,
+    protocol,
+    description
+});
+
 const ec2 = new AWS.EC2();
 
 module.exports = {
