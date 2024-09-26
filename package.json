@@ -5,7 +5,9 @@
   "main": "./src/main.js",
   "type": "module",
   "scripts": {
-    "package": "ncc build src/main.js -o dist/main && ncc build src/cleanup.js -o dist/cleanup"
+    "package:index": "npx ncc build src/index.ts -o dist/add --source-map",
+    "package:post": "npx ncc build src/post.ts -o dist/remove --source-map",
+    "package": "npm run package:index && npm run package:post"
   },
   "author": "",
   "license": "ISC",
@@ -15,6 +17,7 @@
     "public-ip": "^7.0.1"
   },
   "devDependencies": {
-    "@vercel/ncc": "^0.38.2"
+    "@vercel/ncc": "^0.38.2",
+    "typescript": "^5.6.2"
   }
 }
