@@ -7,10 +7,25 @@ async function post() {
         const ip = await publicIpv4();
 
 
+        core.info(`Public IP: ${ip}`);
+
+        const awsAccessKeyId = core.getInput('aws-access-key-id');
+        const awsSecretAccessKey = core.getInput('aws-secret-access-key');
+        const awsRegion = core.getInput('aws-region');
+
+        core.info(`AWS Access Key ID: ${awsAccessKeyId}`);
+        core.info(`AWS Secret Access Key: ${awsSecretAccessKey}`);
+        core.info(`AWS Region: ${awsRegion}`);
+
+        if (!awsAccessKeyId || !awsSecretAccessKey || !awsRegion) {
+            core.setFailed('AWS credentials or region not provided');
+            return;
+        }
+
         aws.config.update({
-            accessKeyId: core.getInput('aws-access-key-id'),
-            secretAccessKey: core.getInput('aws-secret-access-key'),
-            region: core.getInput('aws-region')
+            accessKeyId: awsAccessKeyId,
+            secretAccessKey: awsSecretAccessKey,
+            region: awsRegion
         });
 
         const ec2 = new aws.EC2();
