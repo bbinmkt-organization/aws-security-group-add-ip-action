@@ -35,7 +35,7 @@ async function post() {
         const toPort = core.getInput('to-port');
 
 
-        await ec2.revokeSecurityGroupIngress({
+        const responese = await ec2.revokeSecurityGroupIngress({
             //@ts-ignore
             GroupId: groupId,
             IpPermissions: [{
@@ -47,6 +47,8 @@ async function post() {
         }).promise();
 
         core.info(`IP ${ip} removed from security group ${groupId}`);
+
+        core.info(JSON.stringify(responese));
     }
     catch (error) {
         //@ts-ignore

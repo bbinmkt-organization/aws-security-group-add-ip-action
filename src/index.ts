@@ -66,7 +66,7 @@ async function add() {
 
         core.info(`IP ${ip} added to security group ${GroupId}`);
         // @ts-ignore
-        core.info(data);
+        core.info(JSON.stringify(data));
     } catch (error) {
         // @ts-ignore
         core.setFailed(error.message);
