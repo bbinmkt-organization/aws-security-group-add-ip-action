@@ -29,10 +29,11 @@ async function post() {
         });
 
         const ec2 = new aws.EC2();
-        const groupId = core.getInput('security-group-id');
+        const groupId = core.getInput('aws-security-group-id');
         const protocol = core.getInput('protocol');
         const port = core.getInput('port');
         const toPort = core.getInput('to-port');
+
 
         await ec2.revokeSecurityGroupIngress({
             //@ts-ignore
@@ -44,7 +45,8 @@ async function post() {
                 IpRanges: [{ CidrIp: `${ip}/32` }],
             }]
         }).promise();
-        console.log(`IP ${ip} removed from security group ${groupId}`);
+
+        core.info(`IP ${ip} removed from security group ${groupId}`);
     }
     catch (error) {
         //@ts-ignore

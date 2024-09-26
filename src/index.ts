@@ -35,7 +35,7 @@ async function add() {
 
     const ec2 = new aws.EC2();
 
-    const GroupId = core.getInput('aws-security-group-id')
+    const GroupId = core.getInput('aws-security-group-id');
     const port = core.getInput('port');
     const toPort = core.getInput('to-port');
     const protocol = core.getInput('protocol');
@@ -55,8 +55,7 @@ async function add() {
                 IpProtocol: protocol,
                 FromPort: port,
                 ToPort: toPort ? toPort : port,
-                IpRanges: [{ CidrIp: `${ip}/32` }],
-                Description: description
+                IpRanges: [{ CidrIp: `${ip}/32`, Description: description }],
             }
         ]
     };
