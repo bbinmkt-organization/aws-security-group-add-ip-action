@@ -4,7 +4,7 @@
   "description": "",
   "main": "./src/main.js",
   "scripts": {
-    "package": "ncc build src/main.js -m -o dist/main && ncc build src/cleanup.js -m -o dist/cleanup"
+    "package": "ncc build src/main.js -o dist/main && ncc build src/cleanup.js -o dist/cleanup"
   },
   "author": "",
   "license": "ISC",

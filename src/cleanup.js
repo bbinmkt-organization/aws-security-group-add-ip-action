@@ -1,8 +1,8 @@
-import { ec2, SecurityGroupId } from './config';
-import { publicIpv4 } from 'public-ip';
-import { setFailed } from '@actions/core';
-async function cleanup() {
+const { ec2, SecurityGroupId, protocol, port, toPort } = require('./config');
+const { publicIpv4 } = require('public-ip');
+const { setFailed } = require('@actions/core');
 
+async function cleanup() {
     try {
         const ip = await publicIpv4();
         await ec2.revokeSecurityGroupIngress({
@@ -15,11 +15,11 @@ async function cleanup() {
             }]
         }).promise();
         console.log(`IP ${ip} removed from security group ${SecurityGroupId}`);
-    } 
+    }
     catch (error) {
         console.error(error);
+        setFailed(error.message);
     }
-
 }
 
 cleanup();
