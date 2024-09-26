@@ -1,12 +1,19 @@
 import { publicIpv4 } from 'public-ip';
 import * as core from '@actions/core';
-import { EC2 } from 'aws-sdk';
+import * as aws from 'aws-sdk';
 
 async function post() {
     try {
         const ip = await publicIpv4();
 
-        const ec2 = new EC2();
+
+        aws.config.update({
+            accessKeyId: core.getInput('aws-access-key-id'),
+            secretAccessKey: core.getInput('aws-secret-access-key'),
+            region: core.getInput('aws-region')
+        });
+
+        const ec2 = new aws.EC2();
         const groupId = core.getInput('security-group-id');
         const protocol = core.getInput('protocol');
         const port = core.getInput('port');

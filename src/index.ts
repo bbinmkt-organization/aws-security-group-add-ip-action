@@ -1,5 +1,5 @@
 import * as core from '@actions/core';
-import { EC2 } from 'aws-sdk';
+import * as aws from 'aws-sdk';
 
 import { publicIpv4 } from 'public-ip';
 
@@ -7,10 +7,17 @@ async function add() {
     const ip = await publicIpv4();
 
     core.info(`Public IP: ${ip}`);
+    const ec2 = new aws.EC2();
 
-    const ec2 = new EC2();
+    aws.config.update({
+        accessKeyId: core.getInput('aws-access-key-id'),
+        secretAccessKey: core.getInput('aws-secret-access-key'),
+        region: core.getInput('aws-region')
+    });
 
     const GroupId = core.getInput('aws-security-group-id');
+
+
 
     core.info(`Security Group ID: ${GroupId}`);
 
