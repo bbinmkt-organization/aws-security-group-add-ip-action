@@ -1,6 +1,6 @@
-const { setFailed } = require('@actions/core');
-const { publicIpv4 } = require('public-ip');
-const { ec2, SecurityGroupId, protocol, port, toPort, description } = require('./config');
+import { setFailed } from '@actions/core';
+import { publicIpv4 } from 'public-ip';
+import { ec2, SecurityGroupId, protocol, port, toPort, description } from './config.js';
 
 async function run() {
     try {

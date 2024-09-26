@@ -1,6 +1,6 @@
-const { ec2, SecurityGroupId, protocol, port, toPort } = require('./config');
-const { publicIpv4 } = require('public-ip');
-const { setFailed } = require('@actions/core');
+import { ec2, SecurityGroupId, protocol, port, toPort } from './config.js';
+import { publicIpv4 } from 'public-ip';
+import { setFailed } from '@actions/core';
 
 async function cleanup() {
     try {

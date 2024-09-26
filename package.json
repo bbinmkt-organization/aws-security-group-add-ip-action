@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "./src/main.js",
+  "type": "module",
   "scripts": {
     "package": "ncc build src/main.js -o dist/main && ncc build src/cleanup.js -o dist/cleanup"
   },

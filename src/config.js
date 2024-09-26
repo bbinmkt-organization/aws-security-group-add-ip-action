@@ -1,5 +1,5 @@
-const { getInput } = require('@actions/core');
-const AWS = require('aws-sdk');
+import { getInput } from '@actions/core';
+import AWS from 'aws-sdk';
 
 const accessKeyId = getInput('aws-access-key-id', { required: true });
 const secretAccessKey = getInput('aws-secret-access-key', { required: true });
@@ -29,14 +29,4 @@ console.log('config :: ', {
 
 const ec2 = new AWS.EC2();
 
-module.exports = {
-    accessKeyId,
-    secretAccessKey,
-    region,
-    SecurityGroupId,
-    port,
-    toPort,
-    protocol,
-    description,
-    ec2
-};
+export { ec2, SecurityGroupId, protocol, port, toPort, description };
