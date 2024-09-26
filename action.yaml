@@ -1,0 +1,35 @@
+name: 'AWS Security Group Add IP'
+description: 'Add IP address to your AWS security group'
+inputs:
+  aws-access-key-id:
+    description: 'AWS Access Key ID'
+    required: true
+  aws-secret-access-key:
+    description: 'AWS Secret Access Key'
+    required: true
+  aws-region:
+    description: 'AWS Region'
+    required: true
+  aws-security-group-id:
+    description: 'AWS Security Group'
+    required: true
+  port:
+    description: 'The port which you want to allow'
+    required: false
+    default: '22'
+  to-port:
+    description: 'The to port which you want to allow (Leave it as blank to ignore)'
+    required: false
+    default: ''
+  protocol:
+    description: 'Protocol for the rule'
+    required: false
+    default: 'tcp'
+  description:
+    description: 'The descriptipn of your IP permission'
+    required: false
+    default: 'GitHub Action'
+runs:
+  using: 'node20'
+  main: 'dist/main/index.js'
+  post: 'dist/cleanup/index.js'
