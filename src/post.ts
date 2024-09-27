@@ -1,39 +1,39 @@
 import { publicIpv4 } from 'public-ip';
-import * as core from '@actions/core';
-import * as aws from 'aws-sdk';
+import { info, getInput, setFailed } from '@actions/core';
+import { EC2Client, RevokeSecurityGroupIngressCommand, RevokeSecurityGroupIngressCommandInput } from '@aws-sdk/client-ec2';
 
 async function post() {
     try {
         const ip = await publicIpv4();
-        core.info(`Public IP: ${ip}`);
+        info(`Public IP: ${ip}`);
 
-        const awsAccessKeyId = core.getInput('aws-access-key-id');
-        const awsSecretAccessKey = core.getInput('aws-secret-access-key');
-        const awsRegion = core.getInput('aws-region');
+        const awsAccessKeyId = getInput('aws-access-key-id');
+        const awsSecretAccessKey = getInput('aws-secret-access-key');
+        const awsRegion = getInput('aws-region');
 
-        core.info(`AWS Access Key ID: ${awsAccessKeyId}`);
-        core.info(`AWS Secret Access Key: ${awsSecretAccessKey}`);
-        core.info(`AWS Region: ${awsRegion}`);
+        info(`AWS Access Key ID: ${awsAccessKeyId}`);
+        info(`AWS Secret Access Key: ${awsSecretAccessKey}`);
+        info(`AWS Region: ${awsRegion}`);
 
         if (!awsAccessKeyId || !awsSecretAccessKey || !awsRegion) {
-            core.setFailed('AWS credentials or region not provided');
+            setFailed('AWS credentials or region not provided');
             return;
         }
 
-        aws.config.update({
-            accessKeyId: awsAccessKeyId,
-            secretAccessKey: awsSecretAccessKey,
+        const ec2Client = new EC2Client({
+            credentials: {
+                accessKeyId: awsAccessKeyId,
+                secretAccessKey: awsSecretAccessKey,
+            },
             region: awsRegion
         });
 
-        const ec2 = new aws.EC2();
-        const groupId = core.getInput('aws-security-group-id');
-        const protocol = core.getInput('protocol');
-        const port = core.getInput('port');
-        const toPort = core.getInput('to-port');
+        const groupId = getInput('aws-security-group-id');
+        const protocol = getInput('protocol');
+        const port = getInput('port');
+        const toPort = getInput('to-port');
 
-
-        const res = await ec2.revokeSecurityGroupIngress({
+        const params: RevokeSecurityGroupIngressCommandInput = {
             GroupId: groupId,
             IpPermissions: [{
                 IpProtocol: protocol,
@@ -41,18 +41,21 @@ async function post() {
                 ToPort: Number(toPort ? toPort : port),
                 IpRanges: [{ CidrIp: `${ip}/32` }],
             }]
-        }).promise();
+        };
 
-        core.info(`IP ${ip} removed from security group ${groupId}`);
+        const command = new RevokeSecurityGroupIngressCommand(params);
+        const res = await ec2Client.send(command);
 
-        core.info(JSON.stringify(res));
+        info(`IP ${ip} removed from security group ${groupId}`);
+
+        info(JSON.stringify(res));
     }
     catch (error) {
         if (error instanceof Error) {
-            core.setFailed(error.message);
+            setFailed(error.message);
         }
         else {
-            core.setFailed(`Unknown error: ${error}`);
+            setFailed(`Unknown error: ${error}`);
         }
     }
 }

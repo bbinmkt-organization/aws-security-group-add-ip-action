@@ -5,15 +5,15 @@
   "main": "./src/main.js",
   "type": "module",
   "scripts": {
-    "package:index": "npx ncc build src/index.ts -o dist/add --source-map",
-    "package:post": "npx ncc build src/post.ts -o dist/remove --source-map",
+    "package:index": "npx ncc build src/index.ts -o dist/add -m",
+    "package:post": "npx ncc build src/post.ts -o dist/remove -m",
     "package": "npm run package:index && npm run package:post"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@actions/core": "^1.10.1",
-    "aws-sdk": "^2.1691.0",
+    "@aws-sdk/client-ec2": "^3.658.1",
     "public-ip": "^7.0.1"
   },
   "devDependencies": {
