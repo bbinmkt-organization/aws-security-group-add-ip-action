@@ -16,15 +16,14 @@ async function add() {
     core.info(`AWS Secret Access Key: ${awsSecretAccessKey}`);
     core.info(`AWS Region: ${awsRegion}`);
 
-    if (!awsAccessKeyId || !awsSecretAccessKey || !awsRegion) {
-        core.setFailed('AWS credentials or region not provided');
+    if (!awsAccessKeyId || !awsSecretAccessKey) {
+        core.setFailed('AWS credentials not provided');
         return;
     }
-
-
-
-
-
+    if (!awsRegion) {
+        core.setFailed('AWS region not provided');
+        return;
+    }
 
     aws.config.update({
         accessKeyId: awsAccessKeyId,
@@ -48,28 +47,28 @@ async function add() {
     core.info(`Protocol: ${protocol}`);
     core.info(`Description: ${description}`);
 
-    const params = {
+    const params: aws.EC2.Types.AuthorizeSecurityGroupIngressRequest = {
         GroupId,
         IpPermissions: [
             {
                 IpProtocol: protocol,
-                FromPort: port,
-                ToPort: toPort ? toPort : port,
+                FromPort: Number(port),
+                ToPort: Number(toPort ?? port),
                 IpRanges: [{ CidrIp: `${ip}/32`, Description: description }],
             }
         ]
     };
 
     try {
-        // @ts-ignore
         const data = await ec2.authorizeSecurityGroupIngress(params).promise();
-
         core.info(`IP ${ip} added to security group ${GroupId}`);
-        // @ts-ignore
         core.info(JSON.stringify(data));
     } catch (error) {
-        // @ts-ignore
-        core.setFailed(error.message);
+        if (error instanceof Error) {
+            core.setFailed(error.message);
+        } else {
+            core.setFailed(`Unknown error: ${error}`);
+        }
     }
 
 

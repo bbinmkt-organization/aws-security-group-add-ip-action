@@ -5,8 +5,6 @@ import * as aws from 'aws-sdk';
 async function post() {
     try {
         const ip = await publicIpv4();
-
-
         core.info(`Public IP: ${ip}`);
 
         const awsAccessKeyId = core.getInput('aws-access-key-id');
@@ -35,24 +33,27 @@ async function post() {
         const toPort = core.getInput('to-port');
 
 
-        const responese = await ec2.revokeSecurityGroupIngress({
-            //@ts-ignore
+        const res = await ec2.revokeSecurityGroupIngress({
             GroupId: groupId,
             IpPermissions: [{
                 IpProtocol: protocol,
-                FromPort: port,
-                ToPort: toPort ? toPort : port,
+                FromPort: Number(port),
+                ToPort: toPort ? Number(toPort) : Number(port),
                 IpRanges: [{ CidrIp: `${ip}/32` }],
             }]
         }).promise();
 
         core.info(`IP ${ip} removed from security group ${groupId}`);
 
-        core.info(JSON.stringify(responese));
+        core.info(JSON.stringify(res));
     }
     catch (error) {
-        //@ts-ignore
-        core.setFailed(error.message);
+        if (error instanceof Error) {
+            core.setFailed(error.message);
+        }
+        else {
+            core.setFailed(`Unknown error: ${error}`);
+        }
     }
 }
 
