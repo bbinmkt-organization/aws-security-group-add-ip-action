@@ -5,9 +5,9 @@
   "main": "./src/main.js",
   "type": "module",
   "scripts": {
-    "package:index": "npx ncc build src/index.ts -o dist/add -m",
+    "package:add": "npx ncc build src/add.ts -o dist/add -m",
     "package:post": "npx ncc build src/post.ts -o dist/remove -m",
-    "package": "npm run package:index && npm run package:post"
+    "package": "npm run package:add && npm run package:post"
   },
   "author": "",
   "license": "ISC",
