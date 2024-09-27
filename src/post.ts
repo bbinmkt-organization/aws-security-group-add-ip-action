@@ -38,7 +38,7 @@ async function post() {
             IpPermissions: [{
                 IpProtocol: protocol,
                 FromPort: Number(port),
-                ToPort: toPort ? Number(toPort) : Number(port),
+                ToPort: Number(toPort ? toPort : port),
                 IpRanges: [{ CidrIp: `${ip}/32` }],
             }]
         }).promise();

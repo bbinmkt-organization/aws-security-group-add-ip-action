@@ -53,7 +53,7 @@ async function add() {
             {
                 IpProtocol: protocol,
                 FromPort: Number(port),
-                ToPort: Number(toPort ?? port),
+                ToPort: Number(toPort ? toPort : port),
                 IpRanges: [{ CidrIp: `${ip}/32`, Description: description }],
             }
         ]
