@@ -30,6 +30,6 @@ inputs:
     required: false
     default: 'GitHub Action'
 runs:
-  using: 'node20'
+  using: 'node24'
   main: dist/add/index.js  
   post: dist/remove/index.js
